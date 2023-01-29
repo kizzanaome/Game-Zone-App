@@ -1,35 +1,50 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, FlatList, TouchableOpacity } from 'react-native';
 
 
 export default function App() {
-  const [name, setName] = useState("noma")
-  const [person, SetPerson] = useState({ name: 'noma', age: 20 });
-  const [age, setAge] = useState('30');
+  const [people, setPeople] = useState([
+    { 'name': 'shaun', id: 1 },
+    { 'name': 'yoshi', id: 2 },
+    { 'name': 'mario', id: 3 },
+    { 'name': 'luigi', id: 4 },
+    { 'name': 'peach', id: 5 },
+    { 'name': 'toad', id: 6 },
+    { 'name': 'bowser', id: 7 }
+  ])
 
-  const clickHandler = () => {
-    setName('Lilian');
-    SetPerson({ name: name, age: age })
+  const pressHandler = (id) => {
+    setPeople((prevPoople) => {
+      return prevPoople.filter(person => person.id != id)
+
+    });
+
   }
+
   return (
     <View style={styles.container}>
-      <Text style={{ fontSize: 30, color: 'blue', marginBottom: 20 }}>Made by Noma</Text>
-      <Text>Enter name:</Text>
-      <TextInput style={styles.input}
-        placeholder='e.g. John Doe'
-        onChangeText={(val) => setName(val)} />
-      <Text>Enter age:</Text>
-      <TextInput style={styles.input}
-        placeholder='e.g. 99'
-        onChangeText={(val) => setAge(val)}
-        keyboardType='numeric' />
-      <Text>My name is {name}</Text>
-      <Text>I am {age} years old</Text>
-      <Text> name: {person.name}, age is {person.age}</Text>
-      <View style={styles.buttonContainer}>
-        <Button title="UPDATE STATE" onPress={clickHandler} />
-      </View>
+
+      <FlatList
+        numColumns={2}
+        keyExtractor={(item) => item.id}
+        data={people}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => pressHandler(item.id)}>
+            <Text style={styles.item}>{item.name}</Text>
+          </TouchableOpacity>
+        )}
+      />
+      {/* <ScrollView>
+        {people.map(item => (
+          <View key={item.key}>
+            <Text style={styles.item}>{item.name}</Text>
+          </View>
+        )
+        )
+        }
+      </ScrollView> */}
+
       <StatusBar style="auto" />
     </View>
   );
@@ -39,28 +54,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 40
   },
-  header: {
+  item: {
+    marginTop: 24,
+    padding: 30,
     backgroundColor: 'pink',
-    padding: 20
-  },
-  boldText: {
-    fontWeight: 'bold'
-  },
-  body: {
-    backgroundColor: 'yellow',
-    padding: 20
-  },
-  buttonContainer: {
-    marginTop: 20
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#777',
-    padding: 8,
-    margin: 10,
-    width: 200
+    fontSize: 24,
+    marginHorizontal: 10,
+    marginTop: 24
   }
+
 });
